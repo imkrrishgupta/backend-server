@@ -4,9 +4,19 @@ const hostname = "127.0.0.1";
 const port = 3000;
 
 const server = http.createServer((req, res) => {  // We have written what we have to response, but still we have not created what the server will listen
-    res.statusCode = 200
-    res.setHeader("Content-Type", "text/plain");
-    res.end("Hello ice tea");
+    if (req.url === '/') {
+        res.statusCode = 200
+        res.setHeader("Content-Type", "text/plain");
+        res.end("Hello ice tea");
+    } else if (req.url === '/iced-tea') {
+        res.statusCode = 200
+        res.setHeader("Content-Type", "text/plain");
+        res.end("Thanks for ordering ice tea, its really hot");
+    } else{
+        res.statusCode = 404
+        res.setHeader("Content-Type", "text/plain");
+        res.end("404 Not found");
+    }
 })
 
 server.listen(port, hostname, () => {
