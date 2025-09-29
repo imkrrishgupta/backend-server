@@ -9,6 +9,7 @@ let nextId = 1;  // We will use Id to uniquely identify our data
 
 // add a new tea
 app.post("/teas", (req, res) => {  // Whenever we take any data, the chances are high that we will use `post` method...and majority of the time when we want to save the data to the database
+    console.log("POST");
     const {name, price} = req.body  // De-structuring the data on the go
     const newTea = {id: nextId++, name, price}  // Now i want to create an object so that I can store the object on the database
     teaData.push(newTea);
@@ -44,6 +45,8 @@ app.put("/teas/:id", (req, res) => {
 
 //delete tea
 app.delete("/teas/:id", (req, res) => {
+    console.log("delete");
+    console.log(req.params.id);
     const index = teaData.findIndex(t => t.id === parseInt(req.params.id))  // We use index to delete the data not `id`
     if (index === -1){
         return res.status(404).send("Tea not found");
