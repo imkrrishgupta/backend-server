@@ -1,7 +1,8 @@
+import "dotenv/config"  // It has to be used like this only
 import express from "express";
 
 const app = express()  // It is a powerful object it has so many things that it can do
-const port = 3000;
+const port = process.env.PORT || 3000;
 app.use(express.json());  // We will accept anything that will come from FrontEnd as json() format
 
 let teaData = [];  // We will store data in array format
