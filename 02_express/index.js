@@ -1,16 +1,36 @@
 import "dotenv/config"  // It has to be used like this only
 import express from "express";
+import logger from "./logger.js";
+import morgan from "morgan";
 
 const app = express()  // It is a powerful object it has so many things that it can do
 const port = process.env.PORT || 3000;
 app.use(express.json());  // We will accept anything that will come from FrontEnd as json() format
+
+const morganFormat = ":method :url :status :response-time ms";  // This is morgan format...how we are want our information to come into our console log
+
+app.use(  // This is always after `app`...because when we have not created `app` then how can we inject something onto it
+  morgan(morganFormat, {
+    stream: {  // This `stream` is all the data that is streaming that is going through
+      write: (message) => {
+        const logObject = {  // 
+          method: message.split(" ")[0],  // Splitting the `message` as `string` and nitpicking the data that we have
+          url: message.split(" ")[1],
+          status: message.split(" ")[2],
+          responseTime: message.split(" ")[3],
+        };
+        logger.info(JSON.stringify(logObject));
+      },
+    },
+  })
+);
 
 let teaData = [];  // We will store data in array format
 let nextId = 1;  // We will use Id to uniquely identify our data
 
 // add a new tea
 app.post("/teas", (req, res) => {  // Whenever we take any data, the chances are high that we will use `post` method...and majority of the time when we want to save the data to the database
-    console.log("POST");
+    
     const {name, price} = req.body  // De-structuring the data on the go
     const newTea = {id: nextId++, name, price}  // Now i want to create an object so that I can store the object on the database
     teaData.push(newTea);
@@ -19,6 +39,7 @@ app.post("/teas", (req, res) => {  // Whenever we take any data, the chances are
 
 //get all tea
 app.get("/teas", (req, res) => {  // We use this bacause whenever our server is restarting the data got vanished....so we created an array and `get` the data in a professional way
+    
     res.status(200).send(teaData);
 });
 
